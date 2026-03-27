@@ -669,10 +669,10 @@
                 92663-5893</a>
             </li>
             <li>
-              <a href="https://www.google.com/search?q=use.orbit.wordvirtua.com" target="_blank"
-                rel="noopener noreferrer" class="footer-link">use.orbit.wordvirtua.com</a>
+              <a href="https://www.instagram.com/useorbit.app/" target="_blank" rel="noopener noreferrer"
+                class="footer-link">@useorbit.app</a>
             </li>
-            <li><a href="#contato" class="footer-link">Agendar Demonstração</a></li>
+            <li><a href="https://wa.me/551116510195" class="footer-link">Agendar Demonstração</a></li>
           </ul>
         </div>
       </div>
@@ -747,16 +747,16 @@
 
     // ─── Carrossel de Screenshots ───────────────────────────────
     (function () {
-      const track    = document.getElementById('carouselTrack');
+      const track = document.getElementById('carouselTrack');
       const container = track ? track.parentElement : null; // .carousel-track-container
-      const slides   = track ? Array.from(track.querySelectorAll('.carousel-slide')) : [];
-      const prevBtn  = document.getElementById('carouselPrev');
-      const nextBtn  = document.getElementById('carouselNext');
-      const dots     = Array.from(document.querySelectorAll('#carouselDots .carousel-dot'));
+      const slides = track ? Array.from(track.querySelectorAll('.carousel-slide')) : [];
+      const prevBtn = document.getElementById('carouselPrev');
+      const nextBtn = document.getElementById('carouselNext');
+      const dots = Array.from(document.querySelectorAll('#carouselDots .carousel-dot'));
 
       if (!track || slides.length === 0) return;
 
-      let current   = 0;
+      let current = 0;
       let autoTimer = null;
       let slideWidth = 0; // calculado em px pelo container visível
 
@@ -799,7 +799,7 @@
 
       // Autoplay
       function startAuto() { autoTimer = setInterval(() => goTo(current + 1), 4000); }
-      function stopAuto()  { clearInterval(autoTimer); }
+      function stopAuto() { clearInterval(autoTimer); }
 
       startAuto();
       track.closest('.carousel-wrapper').addEventListener('mouseenter', stopAuto);
@@ -821,7 +821,7 @@
 
       // Teclado
       document.getElementById('screenshotCarousel')?.addEventListener('keydown', e => {
-        if (e.key === 'ArrowLeft')  goTo(current - 1);
+        if (e.key === 'ArrowLeft') goTo(current - 1);
         if (e.key === 'ArrowRight') goTo(current + 1);
       });
     })();
