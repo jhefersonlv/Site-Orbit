@@ -103,12 +103,13 @@
   display: flex;
   transition: transform 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
   will-change: transform;
+  /* Não tem width definida aqui - o JS define os slides em px */
 }
 
 .carousel-slide {
-  min-width: 100%;
+  flex: none;           /* não deixa o flex encolher/crescer */
+  /* width definida via JS igual à largura viìsível do container */
   position: relative;
-  flex-shrink: 0;
 }
 
 /* A imagem ocupa toda a largura — altura auto para preservar aspecto */

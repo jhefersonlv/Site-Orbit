@@ -12,7 +12,10 @@
   <meta property="og:description"
     content="Saia do caos das planilhas e assuma o controle real da sua operação com governança e inteligência." />
   <meta property="og:type" content="website" />
+
   <title>Orbit — A Nova Era da Gestão para Empresas de Serviços</title>
+
+  <link rel="icon" type="image/svg" href="assets/favicon.svg">
 
   <!-- CSS Modular -->
   <link rel="stylesheet" href="css/global.css" />
@@ -565,7 +568,7 @@
   <section class="astro section" id="astro-ia">
     <div class="container astro-container">
       <div class="astro-layout">
-        <div class="astro-image">
+        <div>
           <img src="assets/astro02.svg" alt="Astro — Inteligência Artificial do Orbit" />
         </div>
 
@@ -638,7 +641,7 @@
 
       <div class="footer-main">
         <div class="footer-brand">
-          <img src="assets/logo_escrito.png" alt="Orbit" />
+          <img src="assets/logo_escrito_branco.png" alt="Orbit" />
           <p>Orbit é o ecossistema completo de gestão e governança para empresas de serviços terceirizados. Controle,
             escala e inteligência em um só lugar.</p>
           <div class="footer-social">
@@ -744,30 +747,48 @@
 
     // ─── Carrossel de Screenshots ───────────────────────────────
     (function () {
-      const track   = document.getElementById('carouselTrack');
-      const slides  = track ? track.querySelectorAll('.carousel-slide') : [];
-      const prevBtn = document.getElementById('carouselPrev');
-      const nextBtn = document.getElementById('carouselNext');
-      const dots    = document.querySelectorAll('#carouselDots .carousel-dot');
+      const track    = document.getElementById('carouselTrack');
+      const container = track ? track.parentElement : null; // .carousel-track-container
+      const slides   = track ? Array.from(track.querySelectorAll('.carousel-slide')) : [];
+      const prevBtn  = document.getElementById('carouselPrev');
+      const nextBtn  = document.getElementById('carouselNext');
+      const dots     = Array.from(document.querySelectorAll('#carouselDots .carousel-dot'));
 
       if (!track || slides.length === 0) return;
 
-      let current = 0;
+      let current   = 0;
       let autoTimer = null;
+      let slideWidth = 0; // calculado em px pelo container visível
+
+      // Define a largura de cada slide = largura visível do container
+      function setWidths() {
+        slideWidth = container.offsetWidth;
+        slides.forEach(s => {
+          s.style.width = slideWidth + 'px';
+        });
+        // Reposiciona sem animação após resize
+        const prevTransition = track.style.transition;
+        track.style.transition = 'none';
+        track.style.transform = `translateX(-${current * slideWidth}px)`;
+        // Força reflow e restaura transição
+        track.offsetHeight;
+        track.style.transition = prevTransition;
+      }
 
       function goTo(index) {
-        // Wrap around
         current = (index + slides.length) % slides.length;
-        track.style.transform = `translateX(-${current * 100}%)`;
-
-        // Update dots
+        track.style.transform = `translateX(-${current * slideWidth}px)`;
         dots.forEach((d, i) => {
           d.classList.toggle('active', i === current);
           d.setAttribute('aria-selected', String(i === current));
         });
       }
 
-      // Buttons
+      // Inicializa larguras antes de qualquer outra coisa
+      setWidths();
+      window.addEventListener('resize', setWidths);
+
+      // Botões
       if (prevBtn) prevBtn.addEventListener('click', () => goTo(current - 1));
       if (nextBtn) nextBtn.addEventListener('click', () => goTo(current + 1));
 
@@ -776,35 +797,29 @@
         dot.addEventListener('click', () => goTo(Number(dot.dataset.index)));
       });
 
-      // Autoplay every 4 seconds
-      function startAuto() {
-        autoTimer = setInterval(() => goTo(current + 1), 4000);
-      }
-      function stopAuto() {
-        clearInterval(autoTimer);
-      }
+      // Autoplay
+      function startAuto() { autoTimer = setInterval(() => goTo(current + 1), 4000); }
+      function stopAuto()  { clearInterval(autoTimer); }
 
       startAuto();
       track.closest('.carousel-wrapper').addEventListener('mouseenter', stopAuto);
       track.closest('.carousel-wrapper').addEventListener('mouseleave', startAuto);
 
-      // Touch / swipe support (mobile / WhatsApp)
+      // Touch / swipe (mobile — WhatsApp)
       let touchStartX = 0;
-      let touchEndX   = 0;
 
       track.addEventListener('touchstart', e => {
         touchStartX = e.changedTouches[0].screenX;
+        stopAuto();
       }, { passive: true });
 
       track.addEventListener('touchend', e => {
-        touchEndX = e.changedTouches[0].screenX;
-        const diff = touchStartX - touchEndX;
-        if (Math.abs(diff) > 40) {
-          goTo(diff > 0 ? current + 1 : current - 1);
-        }
+        const diff = touchStartX - e.changedTouches[0].screenX;
+        if (Math.abs(diff) > 40) goTo(diff > 0 ? current + 1 : current - 1);
+        startAuto();
       }, { passive: true });
 
-      // Keyboard accessibility
+      // Teclado
       document.getElementById('screenshotCarousel')?.addEventListener('keydown', e => {
         if (e.key === 'ArrowLeft')  goTo(current - 1);
         if (e.key === 'ArrowRight') goTo(current + 1);
